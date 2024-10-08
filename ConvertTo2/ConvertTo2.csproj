@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <RootNamespace>ConvertTo2</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UseWPF>True</UseWPF>
+    <ApplicationIcon>GUI\Images\icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="GUI\Images\icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="GUI\Image.html" />
+    <EmbeddedResource Include="GUI\Images\icon.png" />
+    <EmbeddedResource Include="GUI\index.html" />
+    <EmbeddedResource Include="GUI\Layout.html" />
+    <EmbeddedResource Include="GUI\Music.html" />
+    <EmbeddedResource Include="GUI\Navigation.html" />
+    <EmbeddedResource Include="GUI\Play.html" />
+    <EmbeddedResource Include="GUI\Settings.html" />
+    <EmbeddedResource Include="GUI\Sidebar.html" />
+    <EmbeddedResource Include="GUI\Style\font-awesome.css" />
+    <EmbeddedResource Include="GUI\Video.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FSC_WebUIFramework" Version="2.4.1" />
+  </ItemGroup>
+
+</Project>
