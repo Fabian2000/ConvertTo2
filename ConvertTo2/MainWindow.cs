@@ -1,4 +1,6 @@
 ﻿using FSC.WUF;
+using Microsoft.Win32;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
@@ -12,6 +14,7 @@ namespace ConvertTo2
         private HtmlDocument? _body;
         private HtmlDocument? _head;
         private HtmlDocument? _content;
+        private string _file = string.Empty;
         internal MainWindow(WindowManager window)
         {
             _window = window;
@@ -69,12 +72,108 @@ namespace ConvertTo2
             await _head.Append(fontAwesome);
 
             _content = _window.GetElement("#content");
+            await InitNavigation();
             await InitSidebar();
+        }
+
+        private async Task InitNavigation()
+        {
+            Action<HtmlDocument> hideAll = async (HtmlDocument e) =>
+            {
+                await _window.GetElement("#file-ctx").RemoveClass("d-block");
+                await _window.GetElement("#file-ctx").AddClass("d-none");
+
+                await _window.GetElement("#install-ctx").RemoveClass("d-block");
+                await _window.GetElement("#install-ctx").AddClass("d-none");
+
+                await _window.GetElement("#about-ctx").RemoveClass("d-block");
+                await _window.GetElement("#about-ctx").AddClass("d-none");
+            };
+
+            await _window.AddEventListener("html", "click", hideAll);
+
+            await _window.AddEventListener("#file-btn", "blur", hideAll);
+            await _window.AddEventListener("#install-btn", "blur", hideAll);
+            await _window.AddEventListener("#about-btn", "blur", hideAll);
+
+            await _window.AddEventListener("#file-btn", "click", async (e) =>
+            {
+                if ((await _window.GetElement("#file-ctx").ClassList()).Contains("d-block"))
+                {
+                    return;
+                }
+
+                await Task.Delay(100);
+                await _window.GetElement("#file-ctx").RemoveClass("d-none");
+                await _window.GetElement("#file-ctx").AddClass("d-block");
+            });
+            await _window.AddEventListener("#install-btn", "click", async (e) =>
+            {
+                if ((await _window.GetElement("#install-ctx").ClassList()).Contains("d-block"))
+                {
+                    return;
+                }
+
+                await Task.Delay(100);
+                await _window.GetElement("#install-ctx").RemoveClass("d-none");
+                await _window.GetElement("#install-ctx").AddClass("d-block");
+            });
+            await _window.AddEventListener("#about-btn", "click", async (e) =>
+            {
+                if ((await _window.GetElement("#about-ctx").ClassList()).Contains("d-block"))
+                {
+                    return;
+                }
+
+                await Task.Delay(100);
+                await _window.GetElement("#about-ctx").RemoveClass("d-none");
+                await _window.GetElement("#about-ctx").AddClass("d-block");
+            });
+
+            await _window.AddEventListener("#about-ctx-btn", "mousedown", (e) =>
+            {
+                MessageBox.Show("ConvertTo2 is the next generation of ConvertTo, a wrapper for FFmpeg, the powerful console-based media conversion software. This version introduces a wide range of new features and enhancements, expanding beyond simple format conversion to offer a more versatile and comprehensive media conversion experience.\n\n© 2024 Fabian Schlüter. All rights reserved.", "About ConvertTo2", MessageBoxButton.OK, MessageBoxImage.Information);
+            });
+
+            await _window.AddEventListener("#open-ctx-btn", "mousedown", (e) =>
+            {
+                _file = OpenFileDialog();
+                InitFile();
+            });
+
+            await _window.AddEventListener("#exit-ctx-btn", "mousedown", (e) =>
+            {
+                Environment.Exit(0);
+            });
+        }
+
+        private void InitFile()
+        {
+            // If file is available and selected, read informations
+            throw new NotImplementedException();
+        }
+
+        private string OpenFileDialog()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            openFileDialog.Filter = "All files (*.*)|*.*";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                return openFileDialog.FileName;
+            }
+
+            MessageBox.Show("Selection cancelled.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return string.Empty;
         }
 
         private async Task InitSidebar()
         {
             await ChangeSidebarBtnActive("#settings-btn");
+            var firstStartContent = new Html();
+            firstStartContent.Load("GUI.Settings.html");
+            await _content!.InnerHtml(firstStartContent);
 
             await _window.AddEventListener("#settings-btn", "click", async (e) =>
             {
