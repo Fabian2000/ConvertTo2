@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <RootNamespace>ConvertTo2</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -24,12 +24,13 @@
     <EmbeddedResource Include="GUI\Play.html" />
     <EmbeddedResource Include="GUI\Settings.html" />
     <EmbeddedResource Include="GUI\Sidebar.html" />
+    <EmbeddedResource Include="GUI\Style\custom.css" />
     <EmbeddedResource Include="GUI\Style\font-awesome.css" />
     <EmbeddedResource Include="GUI\Video.html" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FSC_WebUIFramework" Version="2.4.1" />
+    <PackageReference Include="FSC_WebUIFramework" Version="2.5.0" />
   </ItemGroup>
 
 </Project>

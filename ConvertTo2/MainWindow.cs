@@ -71,6 +71,10 @@ namespace ConvertTo2
             fontAwesome.Load("GUI.Style.font-awesome.css");
             await _head.Append(fontAwesome);
 
+            var customStyle = new Css();
+            customStyle.Load("GUI.Style.custom.css");
+            await _head.Append(customStyle);
+
             _content = _window.GetElement("#content");
             await InitNavigation();
             await InitSidebar();
@@ -174,6 +178,7 @@ namespace ConvertTo2
             var firstStartContent = new Html();
             firstStartContent.Load("GUI.Settings.html");
             await _content!.InnerHtml(firstStartContent);
+            await InitSettings();
 
             await _window.AddEventListener("#settings-btn", "click", async (e) =>
             {
@@ -182,6 +187,7 @@ namespace ConvertTo2
                 var content = new Html();
                 content.Load("GUI.Settings.html");
                 await _content!.InnerHtml(content);
+                await InitSettings();
             });
 
             await _window.AddEventListener("#image-btn", "click", async (e) =>
@@ -221,14 +227,21 @@ namespace ConvertTo2
             });
         }
 
-
         private async Task ChangeSidebarBtnActive(string id)
         {
-            for (int i = 0; i < 5; i++)
+            int sidebarBtnCount = await _window.GetElement(".sidebar-btn").Count();
+            for (int i = 0; i < sidebarBtnCount; i++)
             {
                 await _window.GetElement(".sidebar-btn", i).RemoveClass("active");
             }
             await _window.GetElement(id).AddClass("active");
+        }
+
+        private async Task InitSettings()
+        {
+            await _window.GetElement("#threads").Value(FfmpegData.Threads.ToString());
+            await _window.GetElement("#threads").Attr("max", Environment.ProcessorCount.ToString());
+            await _window.GetElement("#preset").Value(FfmpegData.Preset.ToString().ToLower());
         }
     }
 }
