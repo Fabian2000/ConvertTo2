@@ -1,1 +1,81 @@
-﻿<p>Music</p>
+﻿<div class="container p-4">
+    <!-- Title (not scrollable) -->
+    <h2 class="text-light mb-4">Audio</h2>
+
+    <!-- Audio Player with rounded borders -->
+    <div class="form-group mb-4">
+        <audio id="audioPlayer" class="w-100 bg-light rounded border border-white border-1" controls="controls">
+            <source src="audio.mp3" type="audio/mp3" />
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+
+    <!-- Audio Codec and Bitrate side by side -->
+    <div class="row g-3">
+        <!-- Audio Codec -->
+        <div class="col form-group">
+            <label for="audioCodec" class="text-light">Audio Codec</label>
+            <select class="form-control input-bg-color text-white border-white placeholder-white shadow-none"
+                    id="audioCodec">
+                <option value="aac">AAC</option>
+                <option value="mp3">MP3</option>
+                <option value="opus">Opus</option>
+                <option value="vorbis">Vorbis</option>
+                <option value="ac3">AC3</option>
+                <option value="flac">FLAC</option>
+                <option value="pcm_s16le">PCM</option>
+                <option value="alac">ALAC</option>
+                <option value="wmav2">WMA</option>
+                <option value="eac3">EAC3</option>
+            </select>
+        </div>
+
+        <!-- Audio Bitrate -->
+        <div class="col form-group">
+            <label for="audioBitrate" class="text-light">Bitrate (kbps)</label>
+            <input type="number" class="form-control input-bg-color text-white border-white placeholder-white shadow-none"
+                   id="audioBitrate" placeholder="Bitrate" min="0" />
+        </div>
+    </div>
+
+    <!-- Audio Sample Rate and Channels side by side -->
+    <div class="row g-3 mt-3">
+        <!-- Audio Sample Rate -->
+        <div class="col form-group">
+            <label for="audioSampleRate" class="text-light">Sample Rate (Hz)</label>
+            <input type="number" class="form-control input-bg-color text-white border-white placeholder-white shadow-none"
+                   id="audioSampleRate" placeholder="44100" min="8000" max="192000" value="44100" />
+        </div>
+
+        <!-- Audio Channels -->
+        <div class="col form-group">
+            <label for="audioChannels" class="text-light">Channels</label>
+            <select class="form-control input-bg-color text-white border-white placeholder-white shadow-none"
+                    id="audioChannels">
+                <option value="1">Mono</option>
+                <option value="2">Stereo</option>
+                <option value="3">2.1 Surround</option>
+                <option value="4">4.0 Surround</option>
+                <option value="6">5.1 Surround</option>
+                <option value="8">7.1 Surround</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Cut Start and Cut End side by side -->
+    <div class="row g-3 mt-3">
+        <!-- Cut Start -->
+        <div class="col form-group">
+            <label for="cutStart" class="text-light">Cut Start (hh:mm:ss)</label>
+            <input type="text" class="form-control input-bg-color text-white border-white placeholder-white shadow-none"
+                   id="cutStart" placeholder="00:00:00" />
+        </div>
+
+        <!-- Cut End -->
+        <div class="col form-group">
+            <label for="cutEnd" class="text-light">Cut End (hh:mm:ss)</label>
+            <input type="text" class="form-control input-bg-color text-white border-white placeholder-white shadow-none"
+                   id="cutEnd" placeholder="00:00:00" />
+        </div>
+    </div>
+</div>

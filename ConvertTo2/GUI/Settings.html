@@ -1,28 +1,23 @@
 ﻿<div class="container p-4">
-    <!-- Überschrift -->
+    <!-- Title -->
     <h2 class="text-light mb-4">Settings</h2>
 
-    <!-- Output File -->
-    <!--<div class="form-group mb-4">
-        <label for="outputFile" class="text-light">Output File</label>
-        <input type="text" class="form-control input-bg-color text-white border-white placeholder-white shadow-none" id="outputFile" placeholder="Enter output file name" style="outline: none !important;" />
-    </div>-->
     <div class="form-group mb-4">
         <label for="outputFile" class="text-light">Output File</label>
         <div class="input-group">
             <input type="text" class="form-control input-bg-color text-white border-white placeholder-white shadow-none"
                    id="outputFile" placeholder="Enter output file name" style="outline: none !important;" />
-            <!-- Ordnerwahl Button -->
+            <!-- File Save Button -->
             <button class="btn btn-outline-light" id="folderSelect">
                 <i class="fas fa-folder-open"></i>
             </button>
         </div>
     </div>
 
-    <!-- Grid System für Preset und Threads -->
     <div class="row">
         <!-- Preset (Dropdown) -->
-        <div class="col form-group">
+        <!-- Mistake? Should be on Video Tab?
+            <div class="col form-group">
             <label for="preset" class="text-light">Preset</label>
             <select class="form-control input-bg-color text-white border-white placeholder-white shadow-none" id="preset" style="outline: none !important;">
                 <option value="ultrafast">Ultrafast</option>
@@ -36,9 +31,9 @@
                 <option value="veryslow">Veryslow</option>
                 <option value="placebo">Placebo</option>
             </select>
-        </div>
+        </div>-->
 
-        <!-- Threads (mit korrekt versteckten Up/Down-Buttons) -->
+        <!-- Threads (with hidden Up/Down-Buttons) -->
         <div class="col form-group">
             <label for="threads" class="text-light">Threads</label>
             <input type="number" class="form-control input-bg-color text-white border-white placeholder-white shadow-none" id="threads" min="0" max="32" placeholder="Thread count" style="outline: none !important;" />

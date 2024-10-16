@@ -1,1 +1,108 @@
-﻿<p>Video</p>
+﻿<div class="container p-4">
+    <!-- Title (not scrollable) -->
+    <h2 class="text-light mb-4">Video</h2>
+
+    <!-- Scrollable area for video player and all video settings with fixed height -->
+    <div class="scrollable-content pe-2" style="max-height: 340px; overflow-y: scroll; overflow-x: hidden;">
+        <!-- Video Player with rounded borders -->
+        <div class="form-group mb-4">
+            <video id="videoPlayer" class="w-100 rounded border border-white border-1" controls="controls" controlslist="nodownload">
+                <source src="video.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- Resolution (width and height) -->
+        <div class="form-group mb-4">
+            <label for="resolution" class="text-light">Resolution</label>
+            <div class="input-group mb-3">
+                <!-- Width Input -->
+                <input type="number" class="form-control input-bg-color text-white border-white placeholder-white shadow-none"
+                       id="resolutionWidth" placeholder="Width" />
+
+                <!-- Ratio Lock Icon -->
+                <span class="input-group-text bg-dark text-white" title="Ratio locked">
+                    <i class="fas fa-link"></i>
+                </span>
+
+                <!-- Height Input -->
+                <input type="number" class="form-control input-bg-color text-white border-white placeholder-white shadow-none"
+                       id="resolutionHeight" placeholder="Height" />
+            </div>
+        </div>
+
+        <!-- FPS, Video Bitrate, and Preset side by side -->
+        <div class="row g-3">
+            <!-- FPS -->
+            <div class="col form-group">
+                <label for="fps" class="text-light">FPS</label>
+                <input type="number" class="form-control input-bg-color text-white border-white placeholder-white shadow-none"
+                       id="fps" min="1" max="240" placeholder="FPS" />
+            </div>
+
+            <!-- Video Bitrate -->
+            <div class="col form-group">
+                <label for="videoBitrate" class="text-light">Bitrate (kbps)</label>
+                <input type="number" class="form-control input-bg-color text-white border-white placeholder-white shadow-none"
+                       id="videoBitrate" min="0" placeholder="Bitrate" />
+            </div>
+
+            <!-- Preset -->
+            <div class="col form-group">
+                <label for="preset" class="text-light">Preset</label>
+                <select class="form-control input-bg-color text-white border-white placeholder-white shadow-none"
+                        id="preset">
+                    <option value="ultrafast">Ultrafast</option>
+                    <option value="superfast">Superfast</option>
+                    <option value="veryfast">Veryfast</option>
+                    <option value="faster">Faster</option>
+                    <option value="fast">Fast</option>
+                    <option value="medium" selected="selected">Medium</option>
+                    <option value="slow">Slow</option>
+                    <option value="slower">Slower</option>
+                    <option value="veryslow">Veryslow</option>
+                    <option value="placebo">Placebo</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Video Codec -->
+        <div class="col form-group">
+            <label for="videoCodec" class="text-light mt-4">Video Codec</label>
+            <select class="form-control input-bg-color text-white border-white placeholder-white shadow-none"
+                    id="videoCodec">
+                <option value="h264">H.264</option>
+                <option value="hevc">H.265</option>
+                <option value="vp8">VP8</option>
+                <option value="vp9">VP9</option>
+                <option value="av1">AV1</option>
+                <option value="mpeg4">MPEG-4</option>
+                <option value="prores">ProRes</option>
+                <option value="dnxhd">DNxHD</option>
+                <option value="theora">Theora</option>
+                <option value="mjpeg">MJPEG</option>
+            </select>
+        </div>
+
+        <!-- New row for Cut Start and Cut End -->
+        <div class="row g-3 mt-2">
+            <!-- Cut Start -->
+            <div class="col form-group">
+                <label for="cutStart" class="text-light">Cut Start (hh:mm:ss)</label>
+                <input type="text" class="form-control input-bg-color text-white border-white placeholder-white shadow-none"
+                       id="cutStart" placeholder="00:00:00" />
+            </div>
+
+            <!-- Cut End -->
+            <div class="col form-group">
+                <label for="cutEnd" class="text-light">Cut End (hh:mm:ss)</label>
+                <input type="text" class="form-control input-bg-color text-white border-white placeholder-white shadow-none"
+                       id="cutEnd" placeholder="00:00:00" />
+            </div>
+        </div>
+
+        <!-- Placeholder at the bottom to ensure nothing is cut off -->
+        <div class="form-group mb-4">
+        </div>
+    </div>
+</div>
