@@ -157,6 +157,44 @@ namespace ConvertTo2
                 MessageBox.Show("ConvertTo2 is the next generation of ConvertTo, a wrapper for FFmpeg, the powerful console-based media conversion software. This version introduces a wide range of new features and enhancements, expanding beyond simple format conversion to offer a more versatile and comprehensive media conversion experience.\n\n© 2024 Fabian Schlüter. All rights reserved.", "About ConvertTo2", MessageBoxButton.OK, MessageBoxImage.Information);
             });
 
+            await _window.AddEventListener("#targetSize-ctx-btn", "mousedown", async (e) =>
+            {
+                if (MessageBox.Show("* For video only *\nThis will adjust the video file to the size you want. Do you want to continue?", "Video Target Size", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
+                {
+                    if (string.IsNullOrWhiteSpace(FfmpegData.InputFile))
+                    {
+                        MessageBox.Show("Please select a file first.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                    if (FfmpegData.CurrentMedia != MediaTypes.Video)
+                    {
+                        MessageBox.Show("This feature is only available for video files.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    await _window.GetElement("#frame").AddClass("d-none"); // Hide the frame to show MB output
+                    await _window.GetElement("#target-size").AddClass("d-block"); // Show target size input frame
+                    await _window.GetElement("#target-size").RemoveClass("d-none");
+                }
+            });
+
+            await _window.AddEventListener("#target-size-adjustSettings", "click", async (e) =>
+            {
+                try
+                {
+                    CalculateVideoBitrate(Convert.ToDouble(await _window.GetElement("#target-size-input").Value()));
+                }
+                catch
+                {
+                    MessageBox.Show("Invalid input. Please enter a valid number.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+                await _window.GetElement("#frame").RemoveClass("d-none"); // Show the frame again
+                await _window.GetElement("#target-size").RemoveClass("d-block"); // Hide target size input frame
+                await _window.GetElement("#target-size").AddClass("d-none");
+                await _window.GetElement("#target-size-input").Value("");
+            });
+
             await _window.AddEventListener("#open-ctx-btn", "mousedown", async (e) =>
             {
                 _file = OpenFileDialog();
@@ -177,6 +215,24 @@ namespace ConvertTo2
             {
                 RunAsAdmin("uninstall");
             });
+        }
+
+        private void CalculateVideoBitrate(double targetFileSizeInMB)
+        {
+            // Calculate the target file size in bits
+            double fileSizeInBits = targetFileSizeInMB * 8 * 1024 * 1024;
+
+            // Calculate the audio bitrate in bits per second
+            double audioBitrateInBitsPerSecond = FfmpegData.AudioBitrate * 1000;
+
+            // Calculate the video duration in seconds
+            double videoDurationInSeconds = (FfmpegData.CutEnd - FfmpegData.CutStart).TotalSeconds;
+
+            // Calculate the video bitrate in bits per second
+            double videoBitrateInBitsPerSecond = (fileSizeInBits - (audioBitrateInBitsPerSecond * videoDurationInSeconds)) / videoDurationInSeconds;
+
+            // Set the video bitrate in kbps
+            FfmpegData.VideoBitrate = videoBitrateInBitsPerSecond / 1000;
         }
 
         private static void RunAsAdmin(string argument)
@@ -307,10 +363,11 @@ namespace ConvertTo2
 
             await _window.AddEventListener("#folderSelect", "click", async (e) =>
             {
-                string folder = SaveFileDialog();
-                if (!string.IsNullOrWhiteSpace(folder))
+                string saveFile = SaveFileDialog();
+                if (!string.IsNullOrWhiteSpace(saveFile))
                 {
-                    await _window.GetElement("#folder").Value(folder);
+                    await _window.GetElement("#outputFile").Value(saveFile);
+                    FfmpegData.OutputFile = saveFile;
                 }
             });
 

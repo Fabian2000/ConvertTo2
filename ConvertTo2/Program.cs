@@ -12,6 +12,9 @@ namespace ConvertTo2
         {
             try
             {
+                string exePath = AppDomain.CurrentDomain.BaseDirectory;
+                Environment.CurrentDirectory = exePath;
+
                 if (!File.Exists("ffmpeg.exe") || !File.Exists("ffprobe.exe"))
                 {
                     var result = MessageBox.Show("FFmpeg and FFprobe were not found. Would you like to open the FFmpeg website to download the files?",

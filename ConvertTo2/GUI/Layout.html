@@ -2,7 +2,7 @@
     <div id="nav">
 
     </div>
-    <div id="frame h-100">
+    <div id="frame">
         <div class="container-fluid h-100">
             <div class="row h-100">
                 <div class="col-auto p-0" style="width: 58px;">
@@ -11,9 +11,27 @@
                 </div>
                 <div class="col h-100" style="background: rgb(21, 24, 26); border-top-left-radius: 0.5rem;">
                     <div id="content">
-                        
+
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div id="target-size" class="container-fluid vh-100 d-flex justify-content-center align-items-center d-none">
+        <div class="bg-dark text-white p-4 rounded border border-white" style="max-width: 400px; width: 100%;">
+            <!-- Popup Title -->
+            <h5 class="text-center mb-3">Enter Target Size</h5>
+
+            <!-- Input Field for Size -->
+            <div class="form-group mb-3">
+                <label for="targetSize" class="form-label text-light">Target Size (MB)</label>
+                <input type="number" class="form-control input-bg-color text-white border-white placeholder-white shadow-none"
+                       id="target-size-input" placeholder="Enter size" />
+            </div>
+
+            <!-- Adjust Button -->
+            <div class="text-center">
+                <button type="button" class="btn btn-outline-light" id="target-size-adjustSettings">Adjust Settings</button>
             </div>
         </div>
     </div>
