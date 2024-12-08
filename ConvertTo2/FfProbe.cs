@@ -4,6 +4,8 @@ using System.IO;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Windows;
+using MessageBox = System.Windows.MessageBox;
+using Size = System.Windows.Size;
 
 namespace ConvertTo2
 {

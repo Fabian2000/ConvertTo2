@@ -2,7 +2,8 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
-using System.Windows; // Für MessageBox
+using System.Windows;
+using MessageBox = System.Windows.MessageBox; // Für MessageBox
 
 public static class ContextMenuInstaller
 {

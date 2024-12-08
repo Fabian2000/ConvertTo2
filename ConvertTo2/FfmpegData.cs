@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Threading;
 using System.Windows;
+using MessageBox = System.Windows.MessageBox;
+using Size = System.Windows.Size;
 
 namespace ConvertTo2
 {

@@ -9,6 +9,13 @@ using System.Security.Policy;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Color = System.Windows.Media.Color;
+using HtmlDocument = FSC.WUF.HtmlDocument;
+using MessageBox = System.Windows.MessageBox;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
+using Size = System.Windows.Size;
+using Application = System.Windows.Application;
 
 namespace ConvertTo2
 {
@@ -22,6 +29,7 @@ namespace ConvertTo2
         private LocalHttpServer? _server;
         private Size _origResolution;
         private Ffmpeg _ffmpeg = new Ffmpeg();
+        private Actions _finalAction = Actions.None;
 
         internal MainWindow(WindowManager window)
         {
@@ -275,6 +283,9 @@ namespace ConvertTo2
             SaveFileDialog saveFileDialog = new SaveFileDialog();
 
             saveFileDialog.Filter = "All files (*.*)|*.*";
+            saveFileDialog.FileName = Path.GetFileName(FfmpegData.OutputFile) ?? string.Empty;
+            saveFileDialog.InitialDirectory = !string.IsNullOrWhiteSpace(FfmpegData.OutputFile) ? Path.GetDirectoryName(FfmpegData.OutputFile) : saveFileDialog.InitialDirectory;
+            saveFileDialog.RestoreDirectory = false;
 
             if (saveFileDialog.ShowDialog() == true)
             {
@@ -373,7 +384,7 @@ namespace ConvertTo2
 
             await _window.AddEventListener("#outputFile", "input", async (e) =>
             {
-                FfmpegData.OutputFile = await _window.GetElement("#outputFile").Value();
+                FfmpegData.OutputFile = (await _window.GetElement("#outputFile").Value()).Replace("\\\\", "\\").Replace("//", "/");
             });
 
             await _window.AddEventListener("#threads", "input", async (e) =>
@@ -625,10 +636,28 @@ namespace ConvertTo2
             {
                 Environment.Exit(0);
             });
+
+            await _window.AddEventListener("#auto-completion-actions", "change", async (e) =>
+            {
+                var action = (Actions)int.Parse(await _window.GetElement("#actions-on-finish").Value());
+                _finalAction = action;
+            });
         }
 
         private async Task StartConvert()
         {
+            if (string.IsNullOrWhiteSpace(FfmpegData.OutputFile))
+            {
+                MessageBox.Show("Please select an output file.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (FfmpegData.InputFile == FfmpegData.OutputFile)
+            {
+                MessageBox.Show("The input and output file cannot be the same.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             await _window.GetElement("#startProcess").AddClass("d-none");
             await _window.GetElement("#startProcess").RemoveClass("d-block");
             await _window.GetElement("#stopProcess").AddClass("d-block");
@@ -647,6 +676,9 @@ namespace ConvertTo2
             await _window.GetElement("#install-btn").AddClass("disabled");
             await _window.GetElement("#about-btn").AddClass("disabled");
 
+
+            await _window.GetElement("#auto-completion-actions").RemoveClass("d-none");
+            await _window.GetElement("#auto-completion-actions").AddClass("d-flex");
 
             bool success = FfmpegData.CreateArgs(out string args);
             if (!success)
@@ -681,6 +713,9 @@ namespace ConvertTo2
             await _window.GetElement("#file-btn").RemoveClass("disabled");
             await _window.GetElement("#install-btn").RemoveClass("disabled");
             await _window.GetElement("#about-btn").RemoveClass("disabled");
+
+            await _window.GetElement("#auto-completion-actions").RemoveClass("d-flex");
+            await _window.GetElement("#auto-completion-actions").AddClass("d-none");
         }
 
         private async void OnFfmpegProcessCompleted(object sender, bool success)
@@ -691,9 +726,40 @@ namespace ConvertTo2
                 {
                     await _window.GetElement("#loader").AddClass("d-none");
                     await _window.GetElement("#loader").RemoveClass("d-block");
-                    await _window.GetElement("#done").RemoveClass("disabled");
+                    await _window.GetElement("#done").RemoveClass("d-none");
+                    await _window.GetElement("#auto-completion-actions").RemoveClass("d-flex");
+                    await _window.GetElement("#auto-completion-actions").AddClass("d-none");
                     await _window.GetElement("#stopProcess").AddClass("d-none");
                     await _window.GetElement("#stopProcess").RemoveClass("d-block");
+
+                    switch (_finalAction)
+                    {
+                        case Actions.None:
+                            break;
+                        case Actions.CloseProgram:
+                            Environment.Exit(0);
+                            break;
+                        case Actions.ShutdownComputer:
+                            ShutdownComputer();
+                            break;
+                        case Actions.OpenFile:
+                            try
+                            {
+                                Process.Start(new ProcessStartInfo
+                                {
+                                    FileName = FfmpegData.OutputFile,
+                                    UseShellExecute = true
+                                });
+                            }
+                            catch
+                            {
+                                MessageBox.Show($"Unable to open the converted file.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
+                            break;
+                        case Actions.OpenFileLocation:
+                            Process.Start("explorer.exe", $"/select,\"{FfmpegData.OutputFile}\"");
+                            break;
+                    }
                 }
                 else
                 {
@@ -701,6 +767,16 @@ namespace ConvertTo2
                     await StopConvert();
                 }
             });
+        }
+
+        private void ShutdownComputer()
+        {
+            ProcessStartInfo psi = new ProcessStartInfo("shutdown", "/s /f /t 0")
+            {
+                CreateNoWindow = true,
+                UseShellExecute = false
+            };
+            Process.Start(psi);
         }
 
         private async Task EnableActionTab()

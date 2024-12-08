@@ -1,7 +1,11 @@
 ﻿using FSC.WUF;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows;
+using Application = System.Windows.Application;
+using MessageBox = System.Windows.MessageBox;
+using Size = System.Windows.Size;
 
 namespace ConvertTo2
 {
@@ -10,6 +14,7 @@ namespace ConvertTo2
         [STAThread]
         static void Main(string[] args)
         {
+            SetAppUserModelId("ConvertTo2.NotifyService");
             try
             {
                 string exePath = AppDomain.CurrentDomain.BaseDirectory;
@@ -109,5 +114,23 @@ namespace ConvertTo2
                 MessageBox.Show($"Error during uninstallation: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private static void SetAppUserModelId(string appId)
+        {
+            try
+            {
+                IntPtr hResult = SetCurrentProcessExplicitAppUserModelID(appId);
+                if (hResult != IntPtr.Zero)
+                {
+                    Console.WriteLine("Failed to set AppUserModelID");
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        [DllImport("shell32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern IntPtr SetCurrentProcessExplicitAppUserModelID(string appId);
     }
 }
